@@ -4,6 +4,7 @@ name: Injection Test
 # Run workflow when issue is opened
 on: 
   issues:
+  issue_comment:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -17,4 +18,12 @@ jobs:
       - name: Send Notification
         run: |
           echo "CURRENT_BRANCH=$(echo $([ -z '${{ github.event.pull_request.title }}' ]))" >> $GITHUB_ENV
+          echo '${{ github.ACTOR }}'
+          echo '${{ github.HEAD_REF }}'
+          echo '${{ github.REF }}'
+          echo '${{ github.REF_NAME }}'
+          echo '${{ github.event.comment }}'
+          echo '${{ github.event.comment.body }}'
+          echo '${{ github.event.comment.user.login }}'
+          echo '${{ github.event.commits }}'
           echo "Done"
