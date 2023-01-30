@@ -1,0 +1,17 @@
+on:
+  pull_request:
+    types: [opened]
+
+name: Pull Request Workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Display committer name
+        run: |
+          echo "Committer name: ${{ github.event.head_commit.committer.name }}"
