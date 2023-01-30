@@ -4,6 +4,7 @@ name: Injection Test
 # Run workflow when issue is opened
 on: 
   issues:
+  push:
   issue_comment:
   pull_request:
     types: [closed]
