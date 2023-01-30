@@ -17,35 +17,5 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
        - name: CI 7-1. Push 전용 성공 메시지 전송
-         uses: 8398a7/action-slack@v2.6.0
-         with:
-          status: custom
-          payload: |
-            {
-              "text": ":white_check_mark: ${{ github.event_name }} ${{ job.status }}",
-              "attachments": [{
-                "title": "${{ github.workflow }}",
-                "title_link": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-                "text": "<${{ github.event.head_commit.url}}|push commit link>",
-                "fields": [
-                  {
-                    title: 'Event_name',
-                    value: "${{ github.event_name }}",
-                    short: true
-                  },
-                  {
-                    title: 'Change_Logs',
-                    value: "<https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>",
-                    short: true
-                  },
-                  {
-                    title: 'author',
-                    value: "${{ github.actor }}",
-                    short: true
-                  }
-                ],
-                "footer": "${{ github.event.head_commit.committer.name }}",
-                "color": "good"
-              }]
-              }
-        # secret 설정 (참고 link : https://codeac.tistory.com/112)
+         run: |
+          echo "${{ github.event.head_commit.committer.name }}"
