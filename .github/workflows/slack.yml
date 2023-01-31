@@ -1,6 +1,7 @@
 on:
   pull_request:
     types: [opened]
+  push:
 
 name: Pull Request Workflow
 
