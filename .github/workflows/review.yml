@@ -6,6 +6,7 @@ on:
 
 jobs:
   need-a-reviewer:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: MetaMask/action-require-additional-reviewer@v1
