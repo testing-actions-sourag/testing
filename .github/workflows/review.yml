@@ -1,0 +1,11 @@
+name: Need reviewers
+
+on:
+  pull_request:
+  
+
+jobs:
+  need-a-reviewer:
+    steps:
+      - uses: actions/checkout@v3
+      - uses: MetaMask/action-require-additional-reviewer@v1
