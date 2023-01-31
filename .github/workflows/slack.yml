@@ -16,4 +16,5 @@ jobs:
       - name: Display committer name
         run: |
           echo "Committer name: ${{ github.event.head_commit.committer.name }}"
+          echo "Committer name: ${{ github.event.head_commit.committer.username }}"
           echo "Committer name: ${{ github.event.head_commit.committer.email }}"
