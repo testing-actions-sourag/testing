@@ -1,17 +1,16 @@
-name: On Pull Request
+name: Print changed files
 
-on:
-  pull_request:
-  
+on: pull_request
+
 jobs:
-  pull_requst_file_names:
+  print_files:
     runs-on: ubuntu-latest
-  
+
     steps:
-      - name: Print names
-        id: get_files
-        run: |
-          echo "Changed files:"
-          for file in ${{ github.event.pull_request.changed_files }}; do
-            echo " - ${{ file.filename }}"
-          done
+    - name: Get changed files
+      id: get_files
+      run: |
+        echo "Changed files:"
+        for file in ${{ github.event.pull_request.changed_files }}; do
+          echo " - ${{ file.filename }}"
+        done
