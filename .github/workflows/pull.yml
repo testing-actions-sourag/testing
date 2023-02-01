@@ -13,4 +13,4 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
         shell: pwsh
         run: |
-          $output = "${{ github.event.pull_request }}" -eq "" ? "False" : "$($Env:PR_TITLE)"
+          $output = "${{ github.event.pull_request }}" -eq "" ? "False" : ($Env:PR_TITLE)
