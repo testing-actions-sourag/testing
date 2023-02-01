@@ -1,0 +1,12 @@
+name: testing testing
+
+on:
+  pull_request:
+  
+jobs:
+  testprint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: step1
+        run: |
+           echo "${{ github.event.pull_request.head_branch  }}"
