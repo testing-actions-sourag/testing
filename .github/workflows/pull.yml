@@ -4,9 +4,6 @@ description: >
   opened. Pull requests are only taken into account if they're not already related to a Jira issue (by starting their
   title with a Jira issue key).
 
-on:
-  pull_request:
-
 inputs:
   issue-component:
     required: false
