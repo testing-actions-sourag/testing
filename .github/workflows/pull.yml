@@ -1,0 +1,14 @@
+name: Checking something
+
+on:
+  pull_request:
+  
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: mytest
+        shell: pwsh
+        run: |
+          $output = "${{ github.event.pull_request }}"
