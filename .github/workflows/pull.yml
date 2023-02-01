@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: mytest
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
         shell: pwsh
         run: |
-          $output = "${{ github.event.pull_request }}"
+          $output = "${{ github.event.pull_request }}" -eq "" ? "False" : "$($Env:PR_TITLE)"
