@@ -4,13 +4,14 @@ on:
   pull_request:
   
 jobs:
-  runs-on: ubuntu-latest
+  pull_requst_file_names:
+    runs-on: ubuntu-latest
   
-  steps:
-    name: Print names
-    id: get_files
-    run: |
-        echo "Changed files:"
-        for file in ${{ github.event.pull_request.changed_files }}; do
-          echo " - ${{ file.filename }}"
-        done
+    steps:
+      - name: Print names
+        id: get_files
+        run: |
+          echo "Changed files:"
+          for file in ${{ github.event.pull_request.changed_files }}; do
+            echo " - ${{ file.filename }}"
+          done
