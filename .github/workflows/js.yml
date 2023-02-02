@@ -1,0 +1,14 @@
+name: Pure js bug
+
+on:
+  issues:
+ 
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: step0
+        uses: 94dreamer/create-report@main
+        with:
+          type: close
+          wxhook: mystring
