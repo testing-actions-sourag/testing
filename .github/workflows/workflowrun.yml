@@ -1,0 +1,18 @@
+name: Upload Preview Build to Netlify
+on:
+  workflow_run:
+    workflows: [ "testing testing" ]
+    types:
+      - completed
+      
+jobs:
+  deploy:
+    if: github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    environment: Netlify
+    steps:
+      - id: prdetails
+        uses: matrix-org/pr-details-action@v1.2
+        with:
+          owner: ${{ github.event.workflow_run.head_repository.owner.login }}
+          branch: ${{ github.event.workflow_run.head_branch }}
