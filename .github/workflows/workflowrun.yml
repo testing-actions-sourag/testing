@@ -12,7 +12,6 @@ jobs:
     environment: Netlify
     steps:
       - id: prdetails
-        uses: matrix-org/pr-details-action@v1.2
-        with:
-          owner: ${{ github.event.workflow_run.head_repository.owner.login }}
-          branch: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          "echo ${{ github.event.workflow_run.head_repository.owner.login }}"
+          "echo ${{ github.event.workflow_run.head_branch }}"
