@@ -11,4 +11,4 @@ jobs:
         uses: 94dreamer/create-report@main
         with:
           type: close
-          wxhook: mystring
+          wxhook: https://www.africau.edu/images/default/sample.pdf
