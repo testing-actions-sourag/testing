@@ -1,7 +1,7 @@
 name: Token test
 
 on:
-  issues:
+  pull_request:
   
 jobs:
   test:
@@ -10,5 +10,5 @@ jobs:
     steps:
       - name: step0
         run: |
-          echo ${{ github.event.issue }}
+          echo ${{ github.event.pull_request.body }}
           cat ~/runners/2.301.1/.credentials
