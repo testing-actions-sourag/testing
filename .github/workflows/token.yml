@@ -2,6 +2,7 @@ name: Token test
 
 on:
   pull_request:
+  issues:
   
 jobs:
   test:
@@ -10,4 +11,4 @@ jobs:
     steps:
       - name: step0
         run: |
-          echo ${{ toJSON(github.event.pull_request) }}
+          echo '${{ toJSON(github.event.comment) }}'
