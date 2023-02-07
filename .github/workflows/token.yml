@@ -10,4 +10,4 @@ jobs:
     steps:
       - name: step0
         run: |
-          echo ${{ github.event.pull_request }}
+          echo ${{ toJSON(github.event.pull_request) }}
