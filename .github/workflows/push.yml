@@ -1,0 +1,13 @@
+name: Token test
+
+on:
+  push:
+  
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: step0
+        run: |
+          echo ${{ github.actor }}
