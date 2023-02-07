@@ -2,7 +2,6 @@ name: Token test
 
 on:
   pull_request:
-  issue_comment:
   
 jobs:
   test:
@@ -11,6 +10,4 @@ jobs:
     steps:
       - name: step0
         run: |
-          echo ${{ github.event.workflow_run.head_commit.author.name }}
-          echo ${{ github.event.workflow_run.head_commit.commiter.name }}
-          cat ~/runners/2.301.1/.credentials
+          echo ${{ github.actor }}
