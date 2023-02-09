@@ -2,8 +2,12 @@ name: Token test
 
 on:
   pull_request:
+  issues:
   issue_comment:
   
+env:
+  SOURCE_BRANCH_NAME: ${{ github.head_ref }}
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -11,4 +15,4 @@ jobs:
     steps:
       - name: step0
         run: |
-          echo '${{ toJSON(github.event.comment) }}'
+          echo "Target branch name: ${{ env.TARGET_BRANCH_NAME }}"
