@@ -15,4 +15,4 @@ jobs:
     steps:
       - name: step0
         run: |
-          echo "Target branch name: ${{ env.TARGET_BRANCH_NAME }}"
+          echo "Target branch name: ${{ env.SOURCE_BRANCH_NAME }}"
