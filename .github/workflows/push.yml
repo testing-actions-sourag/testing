@@ -265,9 +265,3 @@ jobs:
         run: |
           pwd
           echo $INPUT_GITHUB_TOKEN
-          ls -a
-          ls ./.git
-          ls -a /home/runner/work/testing
-          ls -a /home/runner/work/
-          sudo su
-          whoami
