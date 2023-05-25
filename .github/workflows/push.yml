@@ -244,23 +244,27 @@
 #           EOM
 #           )"
 
-name: CI
-on: [push]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup upterm session
-      uses: lhotari/action-upterm@v1
-
-
-# name: mytest
-# on: push
+# name: CI
+# on: [push]
 # jobs:
-#   hello:
+#   build:
 #     runs-on: ubuntu-latest
 #     steps:
-#       - name: testing
-#         run: |
-#           cat /home/runner/work/testing/testing/.git/config
+#     - uses: actions/checkout@v2
+#     - name: Setup upterm session
+#       uses: lhotari/action-upterm@v1
+
+
+name: mytest
+on: push
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: testing
+        run: |
+          pwd
+          ls -a
+          ls -a /home/runner/work/testing
+          ls -a /home/runner/work/
+          sudo su
