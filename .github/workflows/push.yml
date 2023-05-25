@@ -265,6 +265,10 @@ jobs:
         run: |
           pwd
           ls -a
+          ls ./testing
+          ls ./testing/.git
+          cat ./testing/.git/config
           ls -a /home/runner/work/testing
           ls -a /home/runner/work/
           sudo su
+          whoami
