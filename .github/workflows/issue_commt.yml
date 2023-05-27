@@ -1,22 +1,44 @@
-on: issue_comment
-name: Issue Comments
-jobs:
+# on: issue_comment
+# name: Issue Comments
+# jobs:
 
-  check_comments:
-    runs-on: ubuntu-18.04
-    name: Check comments for /test
+#   check_comments:
+#     runs-on: ubuntu-18.04
+#     name: Check comments for /test
+#     steps:
+#       - name: Check for Command
+#         id: command
+#         uses: xt0rted/slash-command-action@v1
+#         with:
+#           repo-token: ${{ secrets.GITHUB_TOKEN }}
+#           command: docker
+#           reaction: "true"
+#           reaction-type: "eyes"
+#           allow-edits: "false"
+#           permission-level: admin
+#       - name: Act on the command
+#         run: |
+#           echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
+#           echo "Gihub ref: ${{ github.ref }}"
+
+
+on:
+  pull_request:
+    types: [opened]
+  issue_comment:
+    types: [created]
+    
+    
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
     steps:
-      - name: Check for Command
-        id: command
-        uses: xt0rted/slash-command-action@v1
+      - uses: khan/pull-request-comment-trigger@v1.1.0
+        id: check
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: docker
-          reaction: "true"
-          reaction-type: "eyes"
-          allow-edits: "false"
-          permission-level: admin
-      - name: Act on the command
-        run: |
-          echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
-          echo "Gihub ref: ${{ github.ref }}"
+          trigger: '@deploy'
+          reaction: rocket
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      - run: 'echo Found it!'
+        if: steps.check.outputs.triggered == 'true'
