@@ -1,23 +1,22 @@
-
-on:
-  pull_request:
-    types: [opened]
-  issue_comment:
-    types: [created]
-
-
+on: issue_comment
+name: Issue Comments
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: khan/pull-request-comment-trigger@master
-        id: check
-        with:
-          trigger: '/backend-branch:'
-          prefix_only: true
-          reaction: rocket
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
-      - run: 'echo Found body: ${{ steps.check.outputs.comment_body }} !'
-        if: steps.check.outputs.triggered == 'true'
+  check_comments:
+    runs-on: ubuntu-18.04
+    name: Check comments for /test
+    steps:
+      - name: Check for Command
+        id: command
+        uses: xt0rted/slash-command-action@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          command: docker
+          reaction: "true"
+          reaction-type: "eyes"
+          allow-edits: "false"
+          permission-level: admin
+      - name: Act on the command
+        run: |
+          echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
+          echo "Gihub ref: ${{ github.ref }}"
