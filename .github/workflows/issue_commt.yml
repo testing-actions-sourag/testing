@@ -1,0 +1,23 @@
+
+on:
+  pull_request:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: khan/pull-request-comment-trigger@master
+        id: check
+        with:
+          trigger: '/backend-branch:'
+          prefix_only: true
+          reaction: rocket
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+
+      - run: 'echo Found body: ${{ steps.check.outputs.comment_body }} !'
+        if: steps.check.outputs.triggered == 'true'
