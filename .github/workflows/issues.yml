@@ -1,55 +1,21 @@
-name: gh-on-issue
+# Origin: https://github.com/94dreamer/tdesign-mobile-vue/blob/b68c82378048f130707799f904f348b1b73f10b4/.github/workflows/a.yml
+# force copy from tencent/tdesign
+name: Issue Add Assigness
 
 on:
   issues:
-    types:
-      - opened
+    types: [opened, reopened]
 
 jobs:
-  job1:
+  mark-duplicate:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
+      - run: echo ${{ github.event.issue }}
+      - run: echo ${{ github.event.issue.title }}
+      # https://docs.github.com/cn/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues
+      - uses: 94dreamer/create-report@main
         with:
-          hugo-version: '0.85.0'
-
-      - uses: actions/checkout@v2
-
-      - name: Create content
-        run : |
-          mkdir -p content/posts
-          git clone https://github.com/spf13/hyde.git themes/hyde
-          file="content/posts/${{ github.event.issue.number }}.md"
-
-          touch $file
-          echo "---" > $file
-          echo "title: \"${{ github.event.issue.title }}\"" >> $file
-          echo "date: 2021-11-14T22:40:38Z" >> $file
-          echo "draft: false" >> $file
-          echo "---" >> $file
-          echo "" >> $file
-          echo "${{ github.event.issue.body }}" >> $file
-
-          hugo -D -b https://oscarnevarezleal.github.io/gh-cms/ -t hyde
-
-      - name: Publish content
-        uses: stefanzweifel/git-auto-commit-action@v4
-        id: auto-commit-action
-        with:
-          commit_message: 'New content: ${{ github.event.issue.title }}'
-          commit_options: '--allow-empty'
-          repository: .
-          status_options: '--untracked-files=no'
-          file_pattern: 'content/**/*'
-          push_options: '--force'
-          skip_dirty_check: true
-          skip_fetch: true
-          disable_globbing: true
-
-      - name: Update Gh-pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./public
+          wxhook: ${{ secrets.WX_HOOK_URL }}
+          token: ${{ secrets.GIT_TOKEN_L }}
+          type: 'issue'
+          data: ${{ github.event.issue.title }}
