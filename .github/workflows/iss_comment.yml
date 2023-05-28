@@ -19,8 +19,7 @@ jobs:
           prefix_only: true
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-      - run: 'echo $GITHUB_TOKEN'
-#       'echo Found it! ${{steps.check.outputs.comment_body}}'
+      - run: 'echo Found it! ${{steps.check.outputs.comment_body}}'
         if: steps.check.outputs.comment_body
       - uses: actions/checkout@v2
       - name: Setup upterm session
