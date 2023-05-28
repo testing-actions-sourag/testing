@@ -54,6 +54,8 @@ jobs:
         reaction: rocket
       env:
         GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+    - run: 'echo Found it! ${{steps.check.outputs.comment_body}}'
+      if: steps.check.outputs.comment_body
 
 #     - name: Setup git
 #       if: steps.check.outputs.triggered == 'true'
