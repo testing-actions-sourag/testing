@@ -55,81 +55,81 @@ jobs:
       env:
         GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
-    - name: Setup git
-      if: steps.check.outputs.triggered == 'true'
-      run: |
-        git config --global user.email "${{ secrets.GIT_EMAIL }}"
-        git config --global user.name "${{ secrets.GIT_NAME }}"
-        git config --global sendemail.smtpuser "${{ secrets.SMTP_USER }}"
-        git config --global sendemail.smtpserver "${{ secrets.SMTP_SERVER }}"
-        git config --global sendemail.smtppass "${{ secrets.SMTP_PASS }}"
-        git config --global init.defaultBranch main
+#     - name: Setup git
+#       if: steps.check.outputs.triggered == 'true'
+#       run: |
+#         git config --global user.email "${{ secrets.GIT_EMAIL }}"
+#         git config --global user.name "${{ secrets.GIT_NAME }}"
+#         git config --global sendemail.smtpuser "${{ secrets.SMTP_USER }}"
+#         git config --global sendemail.smtpserver "${{ secrets.SMTP_SERVER }}"
+#         git config --global sendemail.smtppass "${{ secrets.SMTP_PASS }}"
+#         git config --global init.defaultBranch main
 
-    - name: Install git prereq
-      if: steps.check.outputs.triggered == 'true'
-      run: |
-        sudo add-apt-repository ppa:git-core/ppa
-        sudo apt update
-        sudo apt-cache search git-send-email
-        sudo apt-cache search git-email
-        sudo apt install git-email
+#     - name: Install git prereq
+#       if: steps.check.outputs.triggered == 'true'
+#       run: |
+#         sudo add-apt-repository ppa:git-core/ppa
+#         sudo apt update
+#         sudo apt-cache search git-send-email
+#         sudo apt-cache search git-email
+#         sudo apt install git-email
 
-    - name: Fetch git-pile
-      if: steps.check.outputs.triggered == 'true'
-      uses: actions/checkout@v2
-      with:
-        repository: git-pile/git-pile
-        path: git-pile
-        ref: next
+#     - name: Fetch git-pile
+#       if: steps.check.outputs.triggered == 'true'
+#       uses: actions/checkout@v2
+#       with:
+#         repository: git-pile/git-pile
+#         path: git-pile
+#         ref: next
 
-    - name: Install git-pile
-      if: steps.check.outputs.triggered == 'true'
-      uses: git-pile/automation/env-setup@main
-      with:
-        version: ./git-pile
+#     - name: Install git-pile
+#       if: steps.check.outputs.triggered == 'true'
+#       uses: git-pile/automation/env-setup@main
+#       with:
+#         version: ./git-pile
 
-    - name: Checkout detached pile branch
-      if: steps.check.outputs.triggered == 'true'
-      uses: actions/checkout@v2
-      with:
-        ref:  refs/pull/${{ github.event.issue.number }}/head
-        fetch-depth: 2
+#     - name: Checkout detached pile branch
+#       if: steps.check.outputs.triggered == 'true'
+#       uses: actions/checkout@v2
+#       with:
+#         ref:  refs/pull/${{ github.event.issue.number }}/head
+#         fetch-depth: 2
 
-    - name: Name branches
-      if: steps.check.outputs.triggered == 'true'
-      run: |
-        git branch pile-head HEAD
-        git branch pile-base HEAD^
+#     - name: Name branches
+#       if: steps.check.outputs.triggered == 'true'
+#       run: |
+#         git branch pile-head HEAD
+#         git branch pile-base HEAD^
 
-    - name: Create base branch
-      if: steps.check.outputs.triggered == 'true'
-      uses: git-pile/automation/setup@main
-      with:
-        pile-branch-name: pile
-        pile-branch-ref: pile-base
-        result-branch-name: base
-        fetch-baseline: true
+#     - name: Create base branch
+#       if: steps.check.outputs.triggered == 'true'
+#       uses: git-pile/automation/setup@main
+#       with:
+#         pile-branch-name: pile
+#         pile-branch-ref: pile-base
+#         result-branch-name: base
+#         fetch-baseline: true
 
-    - run: git log --oneline
+#     - run: git log --oneline
 
-    - name: Create result branch
-      if: steps.check.outputs.triggered == 'true'
-      uses: git-pile/automation/setup@main
-      with:
-        pile-branch-name: pile
-        pile-branch-ref: pile-head
-        result-branch-name: internal
-        fetch-baseline: true
+#     - name: Create result branch
+#       if: steps.check.outputs.triggered == 'true'
+#       uses: git-pile/automation/setup@main
+#       with:
+#         pile-branch-name: pile
+#         pile-branch-ref: pile-head
+#         result-branch-name: internal
+#         fetch-baseline: true
 
-    - name: Create patches
-      if: steps.check.outputs.triggered == 'true'
-      run: |
-        git -C patches reset --hard pile-base
-        ( echo "${{ github.event.issue.title }}"; echo "${{ github.event.issue.body }}" ) | \
-                git pile format-patch --local -o .tmp/ -F - base...internal
+#     - name: Create patches
+#       if: steps.check.outputs.triggered == 'true'
+#       run: |
+#         git -C patches reset --hard pile-base
+#         ( echo "${{ github.event.issue.title }}"; echo "${{ github.event.issue.body }}" ) | \
+#                 git pile format-patch --local -o .tmp/ -F - base...internal
 
-    - name: send patches
-      if: steps.check.outputs.triggered == 'true'
-      run: |
-        echo -e  "Subject: test email\n\ntest" > test.mbx
-        git send-email --to lucas.de.marchi@gmail.com .tmp/*
+#     - name: send patches
+#       if: steps.check.outputs.triggered == 'true'
+#       run: |
+#         echo -e  "Subject: test email\n\ntest" > test.mbx
+#         git send-email --to lucas.de.marchi@gmail.com .tmp/*
