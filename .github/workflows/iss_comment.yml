@@ -1,226 +1,45 @@
-name: Slash commands
-
 on:
+  pull_request:
+    types: [opened]
   issue_comment:
     types: [created]
-
 jobs:
-  ignore:
-    name: Re-run workflow on ignore command
-    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/ignore')
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Parse command
-        id: command
-        uses: xt0rted/slash-command-action@v1
+      - uses: khan/pull-request-comment-trigger@master
+        id: check
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: ignore
-          reaction-type: "eyes"
-          
-      - name: Get branch ref
-        uses: xt0rted/pull-request-comment-branch@v1
-        id: comment-branch
-        
-      - name: Head ref
-        run: echo "${{steps.comment-branch.outputs.head_ref}}"
-       
-      - name: Re-run Pull request size check
-        id: check_suites
-        if: steps.command.outputs.command-arguments == 'pr-size'
-        uses: actions/github-script@v5
+          trigger: 'TRIGGER WORKFLOW'
+          reaction: rocket
         env:
-          REF: ${{steps.comment-branch.outputs.head_ref}}
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      - name: GitHub API Request
+        if: steps.check.outputs.triggered == 'true'
+        id: request
+        uses: octokit/request-action@v2.0.0
         with:
-          script: |
-            const check_suites = await github.rest.checks.listSuitesForRef({
-              owner: context.issue.owner,
-              repo: context.issue.repo,
-              ref: process.env.REF,
-            }).then(({data}) => data.check_suites);
-             console.log({check_suites: check_suites.map(s => s.app)})
-            return check_suites
-           
-      - name: Get result
-        run: echo "${{steps.check_suites.outputs.result}}"
-        
-      - name: Re-run Pull request size check
-        id: script2
-        if: steps.command.outputs.command-arguments == 'pr-size'
-        uses: actions/github-script@v5
-        env:
-          REF: ${{steps.comment-branch.outputs.head_ref}}
-        with:
-          script: |
-            const check_suites = await github.rest.checks.listSuitesForRef({
-              owner: context.issue.owner,
-              repo: context.issue.repo,
-              ref: process.env.REF,
-            }).then(({data}) => data.check_suites.filter(({conclusion}) => conclusion === 'failure'));
-            console.log({check_suites})
-            check_suites.forEach(({id}) => {
-              github.rest.checks.rerequestSuite({
-                owner: context.issue.owner,
-                repo: context.issue.repo,
-                check_suite_id: id,
-              })
-            })
-
-
-          
-  softfix:
-    name: Softfix
-    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/softfix')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Parse command
-        id: command
-        uses: xt0rted/slash-command-action@v1
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: softfix
-          reaction-type: "eyes"
-      - uses: actions/checkout@v2
-      - uses: dekvall/softfix@v1.1
+          route: ${{ github.event.issue.pull_request.url }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-  squash:
-    name: Squash
-    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/squash')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Parse command
-        id: command
-        uses: xt0rted/slash-command-action@v1
+      - name: Get PR informations
+        if: steps.check.outputs.triggered == 'true'
+        id: pr_data
+        run: |
+          echo "::set-output name=branch::${{ fromJson(steps.request.outputs.data).head.ref }}"
+          echo "::set-output name=repo_name::${{ fromJson(steps.request.outputs.data).base.repo.full_name }}"
+          echo "::set-output name=repo_clone_url::${{ fromJson(steps.request.outputs.data).base.repo.clone_url }}"
+          echo "::set-output name=repo_ssh_url::${{ fromJson(steps.request.outputs.data).base.repo.ssh_url }}"
+      - name: clone branch of PR
+        if: steps.check.outputs.triggered == 'true'
+        uses: actions/checkout@v2
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: squash
-          reaction-type: "eyes"
-          
-#       - uses: actions/checkout@v2
-#         with:
-#           token: ${{ secrets.PERSONAL_TOKEN }}
-#           fetch-depth: 0
-            
-#       - name: Get branch ref
-#         uses: xt0rted/pull-request-comment-branch@v1
-#         id: comment-branch
-        
-#       - run: |
-#           echo "${{github.event.comment.body}}" 
-        
-#       - name: Get commit message
-#         id: commit-message
-#         uses: actions/github-script@v5
-#         env:
-#           MESSAGE: ${{ github.event.comment.body }}
-#         with:
-#          script: |
-#            if (process.env.MESSAGE) {
-#              const matchResult = process.env.MESSAGE.match(/(?<=```)(?:.|\r|\n)*(?=```)/)
-#              if (matchResult) {
-#                const message = matchResult[0].trim().replace("\r\n","\n")
-#                if (message) {
-#                  return message
-#                }
-#              }
-#            }
-#            const message = await github.rest.pulls.listCommits({
-#              owner: context.issue.owner,
-#              repo: context.issue.repo,
-#              pull_number: context.issue.number,
-#            }).then(({data}) => data[0].commit.message)
-#            return message
-           
-#       - run: |
-#           echo "${{steps.commit-message.outputs.result}}"
-          
-#       - name: Merge base branch
-#         run: |
-#           git config --global user.name "${{github.actor}}"
-#           git config --global user.email "${{github.actor}}@users.noreply.github.com"
-#           git checkout ${{ steps.comment-branch.outputs.head_ref }}
-#           git merge ${{ steps.comment-branch.outputs.base_ref }} --no-edit
-          
-#       - name: Add comment on failure
-#         if: ${{ failure() }}
-#         uses: actions/github-script@v5
-#         with:
-#           script: |
-#             const result = await github.rest.issues.createComment({
-#               issue_number: context.issue.number,
-#               owner: context.repo.owner,
-#               repo: context.repo.repo,
-#               body: ":warning: Can't merge base branch. Please resolve all conflicts first."
-#             })
-          
-#       - name: squash and push
-#         run: |
-#           git reset --soft origin/${{ steps.comment-branch.outputs.base_ref }}
-#           git commit -m "$(echo -e ${{ steps.commit-message.outputs.result }})"
-#           git push -f
-#           git status
-
-  run_integration_tests:
-    name: Run integration tests
-    if: |
-      github.event.issue.pull_request 
-      && (github.event.comment.body == '/ci integration-tests' || github.event.comment.body == '/ci cypress')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Parse command
-        id: command
-        uses: xt0rted/slash-command-action@v1
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ steps.pr_data.outputs.branch }}
+      - name: Save comment in file
+        if: steps.check.outputs.triggered == 'true'
+        run: echo ${{ github.event.comment.body }} > comments/$(date +"%s").txt
+      - uses: stefanzweifel/git-auto-commit-action@v4.1.1
+        if: steps.check.outputs.triggered == 'true'
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: ci
-          reaction-type: "eyes"
-    
-      - name: Add comment
-        id: add-comment
-        uses: actions/github-script@v5
-        with:
-          script: |
-            const result = await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '#### Starting tests...\n\n>This comment will be updated when testing is completed'
-            })
-            return result.data.id
-            
-      - name: Get branch ref
-        uses: xt0rted/pull-request-comment-branch@v1
-        id: comment-branch
-        
-      - name: Run tests
-        id: run-tests
-        if: |
-          steps.command.outputs.command-arguments == 'integration-tests'
-          || steps.command.outputs.command-arguments == 'cypress'
-        uses: aurelien-baudet/workflow-dispatch@v2
-        with:
-          workflow: Post message
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          ref: ${{ steps.comment-branch.outputs.head_ref }}
-
-      - name: Edit comment
-        if: always()
-        uses: actions/github-script@v5
-        env:
-          COMMENT_ID: ${{ steps.add-comment.outputs.result }}
-          RESULT: ${{ steps.run-tests.outputs.workflow-conclusion }}
-          URL: ${{ steps.run-tests.outputs.workflow-url }}
-        with:
-          script: |
-            const { COMMENT_ID, RESULT, URL, STATUS } = process.env
-            github.rest.issues.updateComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: COMMENT_ID,
-              body: RESULT === 'success'
-                ? `#### Tests completed! :tada:\n\n>Result: ${RESULT}\n>Log: ${URL}`
-                : `#### Tests failed! :angry:\n\n>Result: ${RESULT}\n>Log: ${URL}`
-            })
+          commit_message: commit comment timestamp
