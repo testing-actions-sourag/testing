@@ -98,69 +98,69 @@ jobs:
           command: squash
           reaction-type: "eyes"
           
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          fetch-depth: 0
+#       - uses: actions/checkout@v2
+#         with:
+#           token: ${{ secrets.PERSONAL_TOKEN }}
+#           fetch-depth: 0
             
-      - name: Get branch ref
-        uses: xt0rted/pull-request-comment-branch@v1
-        id: comment-branch
+#       - name: Get branch ref
+#         uses: xt0rted/pull-request-comment-branch@v1
+#         id: comment-branch
         
-      - run: |
-          echo "${{github.event.comment.body}}" 
+#       - run: |
+#           echo "${{github.event.comment.body}}" 
         
-      - name: Get commit message
-        id: commit-message
-        uses: actions/github-script@v5
-        env:
-          MESSAGE: ${{ github.event.comment.body }}
-        with:
-         script: |
-           if (process.env.MESSAGE) {
-             const matchResult = process.env.MESSAGE.match(/(?<=```)(?:.|\r|\n)*(?=```)/)
-             if (matchResult) {
-               const message = matchResult[0].trim().replace("\r\n","\n")
-               if (message) {
-                 return message
-               }
-             }
-           }
-           const message = await github.rest.pulls.listCommits({
-             owner: context.issue.owner,
-             repo: context.issue.repo,
-             pull_number: context.issue.number,
-           }).then(({data}) => data[0].commit.message)
-           return message
+#       - name: Get commit message
+#         id: commit-message
+#         uses: actions/github-script@v5
+#         env:
+#           MESSAGE: ${{ github.event.comment.body }}
+#         with:
+#          script: |
+#            if (process.env.MESSAGE) {
+#              const matchResult = process.env.MESSAGE.match(/(?<=```)(?:.|\r|\n)*(?=```)/)
+#              if (matchResult) {
+#                const message = matchResult[0].trim().replace("\r\n","\n")
+#                if (message) {
+#                  return message
+#                }
+#              }
+#            }
+#            const message = await github.rest.pulls.listCommits({
+#              owner: context.issue.owner,
+#              repo: context.issue.repo,
+#              pull_number: context.issue.number,
+#            }).then(({data}) => data[0].commit.message)
+#            return message
            
-      - run: |
-          echo "${{steps.commit-message.outputs.result}}"
+#       - run: |
+#           echo "${{steps.commit-message.outputs.result}}"
           
-      - name: Merge base branch
-        run: |
-          git config --global user.name "${{github.actor}}"
-          git config --global user.email "${{github.actor}}@users.noreply.github.com"
-          git checkout ${{ steps.comment-branch.outputs.head_ref }}
-          git merge ${{ steps.comment-branch.outputs.base_ref }} --no-edit
+#       - name: Merge base branch
+#         run: |
+#           git config --global user.name "${{github.actor}}"
+#           git config --global user.email "${{github.actor}}@users.noreply.github.com"
+#           git checkout ${{ steps.comment-branch.outputs.head_ref }}
+#           git merge ${{ steps.comment-branch.outputs.base_ref }} --no-edit
           
-      - name: Add comment on failure
-        if: ${{ failure() }}
-        uses: actions/github-script@v5
-        with:
-          script: |
-            const result = await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: ":warning: Can't merge base branch. Please resolve all conflicts first."
-            })
+#       - name: Add comment on failure
+#         if: ${{ failure() }}
+#         uses: actions/github-script@v5
+#         with:
+#           script: |
+#             const result = await github.rest.issues.createComment({
+#               issue_number: context.issue.number,
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               body: ":warning: Can't merge base branch. Please resolve all conflicts first."
+#             })
           
-      - name: squash and push
-        run: |
-          git reset --soft origin/${{ steps.comment-branch.outputs.base_ref }}
-          git commit -m "$(echo -e ${{ steps.commit-message.outputs.result }})"
-          git push -f
-          git status
+#       - name: squash and push
+#         run: |
+#           git reset --soft origin/${{ steps.comment-branch.outputs.base_ref }}
+#           git commit -m "$(echo -e ${{ steps.commit-message.outputs.result }})"
+#           git push -f
+#           git status
 
   run_integration_tests:
     name: Run integration tests
