@@ -1,7 +1,7 @@
 name: Build website
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
     paths:
       - "website/**"
       - "firebase.json"
