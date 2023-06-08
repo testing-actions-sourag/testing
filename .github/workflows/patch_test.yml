@@ -8,4 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          "echo ${{ github.event.comment.body }}
+          "echo {$BODY}"
+        env:
+          BODY: ${{ github.event.comment.body }}
