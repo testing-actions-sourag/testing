@@ -8,6 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "${UPDATE_COMPONENT}"
+          echo "${BODY}"
         env:
           BODY: ${{ github.event.comment.body }}
