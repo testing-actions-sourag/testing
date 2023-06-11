@@ -11,3 +11,6 @@ jobs:
           echo "${{ github.event.comment.body }}"
         env:
           BODY: ${{ github.event.comment.body }}
+      - uses: actions/checkout@v2
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
