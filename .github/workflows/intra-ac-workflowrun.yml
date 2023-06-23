@@ -1,0 +1,13 @@
+name: Discussion Workflow Run
+
+on:
+  workflow_run:
+    workflows: ["Discussion"]
+    
+jobs:
+  say_hello:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: souragc/myaction@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
