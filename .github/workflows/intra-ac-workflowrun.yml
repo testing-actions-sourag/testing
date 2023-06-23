@@ -3,6 +3,8 @@ name: Discussion Workflow Run
 on:
   workflow_run:
     workflows: ["Discussion"]
+    types:
+      - completed
     
 jobs:
   say_hello:
