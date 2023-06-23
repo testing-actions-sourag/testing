@@ -1,3 +1,4 @@
+name: Discussion
 on:
   discussion:
     types: [created]
