@@ -2,7 +2,7 @@ name: Discussion Workflow Run
 
 on:
   workflow_run:
-    workflows: ["Discussion"]
+    workflows: ["Pull Request"]
     types:
       - completed
     
