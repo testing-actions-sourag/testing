@@ -31,6 +31,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
+    - name: haa
+      run: |
+        echo ${{ github.head_ref }}
+        echo ${{ github.base_ref }}
 
     - name: Get branch name
       id: branch-name
