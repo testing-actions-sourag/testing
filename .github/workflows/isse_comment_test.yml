@@ -4,8 +4,9 @@ on:
   issue_comment:
   
 jobs:
-  runs-on: ubuntu-latest
-  if: ${{ github.event.issue.pull_request }}
-  
-  steps:
-    - run: echo ${{ github.event.issue.title }}
+  job1:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.issue.pull_request }}
+    
+    steps:
+      - run: echo ${{ github.event.issue.title }}
