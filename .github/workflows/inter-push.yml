@@ -1,0 +1,57 @@
+name: chart versioning2
+
+on: [push]
+
+
+
+
+jobs:
+  chart_versioning2:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get base ref branch
+        id: branch-name
+        uses: tj-actions/branch-names@v5.2 # vulnerable action
+        
+      - name: Get PR number
+        id: action
+        uses: kamatama41/get-pr-number-action@v0
+ #     - name: Automated version update
+ #       run: sed -i -E 's@(targetRevision:) (.*)@\1 '"${{ steps.action.outputs.number }}-${{ steps.branch-name.outputs.base_ref_branch }}"'@g' version.txt
+      - uses: actions/checkout@v3
+      - name: Automated version update
+        
+        run: |
+         git config user.name github-actions
+         git config user.email github-actions@github.com
+         git fetch
+         git checkout ${{ steps.branch-name.outputs.current_branch }}
+         sed -i -E 's@(targetRevision:) (.*)@\1 '"${{ steps.action.outputs.number }}-${{ steps.branch-name.outputs.base_ref_branch }}"'@g' version.txt
+         git add .
+         if [ -n "$(git status --porcelain)" ]; then
+             git commit -m "update the chart version"
+             git push
+         else
+           echo "no changes";
+         fi
+          
+      - name: Staging Tests ✅
+        if: ${{ success() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.KEY }}
+        # set the merge commit status check
+        # using GitHub REST API
+        # see https://docs.github.com/en/rest/reference/repos#create-a-commit-status
+        run: |
+          curl --request POST \
+          --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+          --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          --header 'content-type: application/json' \
+          --data '{
+            "context": "chart_versioning2",
+            "state": "success",
+            "description": "chart_versioning2",
+            "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          }'
