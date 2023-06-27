@@ -9,5 +9,7 @@ jobs:
     steps:
     - id: comment_body
       uses: Khan/pull-request-comment-trigger@master
+      with:
+        trigger: "review"
     - run: |
         echo ${{steps.comment_body.outputs.comment_body}} 
