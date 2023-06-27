@@ -1,0 +1,33 @@
+name: Pull Request
+
+on: pull_request
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 11
+
+      - name: Short SHA
+        env:
+          COMMIT_SHA: ${{github.event.pull_request.head.sha}}
+        run: echo "short_sha=${COMMIT_SHA::7}" >> $GITHUB_ENV
+        
+      - name: Read version
+        id: read_version
+        uses: reedyuk/read-properties@v1.0.1
+        with:
+          path: 'gradle.properties'
+          property: 'version'
+          
+      - name: Update version
+        uses: reedyuk/write-properties@v1.0.1 # Origin: https://github.com/Reedyuk/write-properties/tree/5949537c1e3633c4626924b589353b2eee543388
+        with:
+          path: 'gradle.properties'
+          property: 'version'
+          value: "${{ steps.read_version.outputs.value }}-${{ github.head_ref }}-${{ env.short_sha }}"
