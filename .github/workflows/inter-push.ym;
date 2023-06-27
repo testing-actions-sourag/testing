@@ -1,0 +1,20 @@
+name: 'Build LaTex Document'
+on: 
+  push:
+    paths-ignore:
+      - 'songbook.pdf'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: GuillaumeFalourd/git-commit-push@v1.3
+        with:
+          target_branch: main
+          files: songbook-${{ github.ref_name }}.pdf
+          commit_message: ${{ github.event.head_commit.message }}
+          remote_repository: https://github.com/JonathanTab/pages
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          force: true
