@@ -1,0 +1,20 @@
+name: Slack Notification Workflow
+
+on:
+  discussion:
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: adamkdean/simple-slack-notify@master
+        with:
+          status: ${{ job.status }}
+          success_text: ${{ github.event.discussion.body }} # source
+          failure_text: 'Failed miserably'
+          fields: |
+            [{ "title": "Action URL", "value": "${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}"},
+            { "title": "${{github.event.discussion.title}}", "value": "${{ github.event.discussion.body }}"}]
