@@ -10,6 +10,7 @@ jobs:
   say_hello:
     runs-on: ubuntu-latest
     steps:
-      - uses: souragc/myaction2@main
+      - uses: souragc/myaction3@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          head_branch: ${{ github.event.workflow_run.head_branch }}
