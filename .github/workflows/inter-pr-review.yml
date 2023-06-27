@@ -1,0 +1,13 @@
+name: CI
+on:
+  pull_request_review:
+  pull_request:
+
+jobs:
+  issue:
+    runs-on: ubuntu-latest
+    steps:
+    - id: comment_body
+      uses: Khan/pull-request-comment-trigger@master
+    - run: |
+        echo ${{steps.comment_body.outputs.comment_body}} 
