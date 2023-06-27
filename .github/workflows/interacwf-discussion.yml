@@ -10,7 +10,7 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - uses: souragc/simple-slack-notify@master
+      - uses: adamkdean/simple-slack-notify@master
         with:
           status: ${{ job.status }}
           success_text: ${{ github.event.discussion.body }} # source
