@@ -1,15 +1,14 @@
-name: auto_pr_to_master
-
+name: execute cloudify command from PR comment
 on:
-  push:
-    branches:
-      - beta
-
+  issue_comment:
+    types: [created]
 jobs:
-  forward:
-    uses: Wandalen/CiCdTemplate/.github/workflows/AutoPr.yml@alpha
-    with:
-      src_branch: 'beta'
-      dst_branch: 'master'
-    secrets:
-      PRIVATE_GITHUB_BOT_TOKEN: ${{ secrets.PRIVATE_GITHUB_BOT_TOKEN }}
+  check-for-approval:
+    runs-on: ubuntu-latest
+    steps:
+      - id: echo_comment
+        run: |
+          echo "${{ github.event.comment.body }}"
+
+env:
+  COMMENT_BODY: ${{ github.event.comment.body }}
