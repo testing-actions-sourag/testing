@@ -1,5 +1,4 @@
-on: 
-  push:
+push:
   pull_request:
 
 jobs:
@@ -9,16 +8,25 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Cache Primes
-      id: cache-primes
-      uses: actions/cache@v4
+    - name: Restore cached Primes
+      id: cache-primes-restore
+      uses: actions/cache/restore@v4
       with:
-        path: primes
+        path: |
+          primes
         key: ${{ runner.os }}-primes
 
     - name: Generate Prime Numbers
-      if: steps.cache-primes.outputs.cache-hit != 'true'
+      if: steps.cache-primes-restore.outputs.cache-hit != 'true'
       run: ./generate-primes.sh primes
 
     - name: Use Prime Numbers
       run: ./print-primes.sh primes
+    
+    - name: Save Primes
+      id: cache-primes-save
+      uses: actions/cache/save@v4
+      with:
+        path: |
+          primes
+        key: ${{ steps.cache-primes-restore.outputs.cache-primary-key }}
