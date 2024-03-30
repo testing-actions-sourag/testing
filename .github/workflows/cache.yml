@@ -21,4 +21,4 @@ jobs:
       run: ./generate-primes.sh primes
 
     - name: Use Prime Numbers
-      run: cat primes
+      run: ./print-primes.sh primes
