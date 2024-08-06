@@ -66,11 +66,38 @@ on:
 #         with:
 #           labels: bug
 
+# jobs:
+#   expose_env:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: FranzDiebold/github-env-vars-action@v2
+#       - name: Print environment variables
+#         run: |
+#           echo "CI_REPOSITORY_SLUG=$CI_REPOSITORY_SLUG"
+
+
 jobs:
-  expose_env:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
-      - uses: FranzDiebold/github-env-vars-action@v2
-      - name: Print environment variables
-        run: |
-          echo "CI_REPOSITORY_SLUG=$CI_REPOSITORY_SLUG"
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+    - name: Create local changes
+      run: |
+        touch testing_testing_testing
+        echo "HAHAHA" >> testing_testing_testing
+    - name: Commit files
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git commit -a -m "Add changes"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
