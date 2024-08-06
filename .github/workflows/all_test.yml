@@ -1,8 +1,8 @@
 name: "Testing baby"
 
 on:
-  # workflow_dispatch:
-  issue_comment:
+  workflow_dispatch:
+  # issue_comment:
   
 # jobs:
 #   runner:
@@ -57,11 +57,20 @@ on:
 #         with:
 #           mdbook-version: 'latest'
 
+## Requires issue_comment
+# jobs:
+#   remove_label:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions-ecosystem/action-remove-labels@v1
+#         with:
+#           labels: bug
 
 jobs:
-  remove_label:
+  expose_env:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions-ecosystem/action-remove-labels@v1
-        with:
-          labels: bug
+      - uses: FranzDiebold/github-env-vars-action@v2
+      - name: Print environment variables
+        run: |
+          echo "CI_REPOSITORY_SLUG=$CI_REPOSITORY_SLUG"
