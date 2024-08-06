@@ -21,9 +21,19 @@ on:
 #         env:
 #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+# jobs:
+#   download:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: download
+#         uses: actions/download-artifact@v4
+
 jobs:
-  download:
+  buildx:
     runs-on: ubuntu-latest
     steps:
-      - name: download
-        uses: actions/download-artifact@v4
+      - name: Set up Docker Buildx
+        uses: crazy-max/ghaction-docker-buildx@v3
+        with:
+          buildx-version: latest
+          qemu-version: latest
