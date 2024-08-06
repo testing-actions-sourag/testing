@@ -43,6 +43,6 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: configure Pagefile
-      uses: al-cheb/configure-pagefile-action@v1.2
+      uses: al-cheb/configure-pagefile-action@v1.4
       with:
         minimum-size: 8GB
