@@ -38,11 +38,20 @@ on:
 #           buildx-version: latest
 #           qemu-version: latest
 
+# jobs:
+#   build:
+#     runs-on: windows-latest
+#     steps:
+#     - name: configure Pagefile
+#       uses: al-cheb/configure-pagefile-action@v1.4
+#       with:
+#         minimum-size: 8GB
+
 jobs:
-  build:
-    runs-on: windows-latest
+  deploy:
+    runs-on: ubuntu-latest
     steps:
-    - name: configure Pagefile
-      uses: al-cheb/configure-pagefile-action@v1.4
-      with:
-        minimum-size: 8GB
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v2
+        with:
+          mdbook-version: 'latest'
