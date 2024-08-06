@@ -1,14 +1,8 @@
 name: "Testing baby"
 
 on:
-  # workflow_dispatch:
-  pull_request:
-
-permissions:
-  contents: read
-  issues: write
-  pull-requests: write
-
+  workflow_dispatch:
+  
 # jobs:
 #   runner:
 #     runs-on: ubuntu-latest
@@ -45,14 +39,10 @@ permissions:
 #           qemu-version: latest
 
 jobs:
-  update_pr:
+  piper:
     runs-on: ubuntu-latest
     steps:
-    - uses: tzkhan/pr-update-action@v2
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
-        base-branch-regex: '[a-z\d-_.\\/]+'
-        head-branch-regex: '[a-z\d-_.\\/]+'
-        title-template: '[%headbranch%] '
-        body-update-action: 'suffix'
-        body-uppercase-base-match: false
+      - uses: SAP/project-piper-action@main
+        with:
+          step-name: mavenBuild
+          flags: '--publish --createBOM --logSuccessfulMavenTransfers'
