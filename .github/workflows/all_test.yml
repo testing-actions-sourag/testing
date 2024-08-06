@@ -1,7 +1,8 @@
 name: "Testing baby"
 
 on:
-  workflow_dispatch:
+  # workflow_dispatch:
+  issue_comment:
   
 # jobs:
 #   runner:
@@ -47,11 +48,20 @@ on:
 #       with:
 #         minimum-size: 8GB
 
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Setup mdBook
+#         uses: peaceiris/actions-mdbook@v2
+#         with:
+#           mdbook-version: 'latest'
+
+
 jobs:
-  deploy:
+  remove_label:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup mdBook
-        uses: peaceiris/actions-mdbook@v2
+      - uses: actions-ecosystem/action-remove-labels@v1
         with:
-          mdbook-version: 'latest'
+          labels: bug
