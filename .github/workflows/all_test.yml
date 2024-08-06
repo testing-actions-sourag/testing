@@ -1,7 +1,8 @@
 name: "Testing baby"
 
 on:
-  workflow_dispatch:
+  # workflow_dispatch:
+  pull_request:
 
 # jobs:
 #   runner:
@@ -28,12 +29,28 @@ on:
 #       - name: download
 #         uses: actions/download-artifact@v4
 
+# jobs:
+#   buildx:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Set up Docker Buildx
+#         uses: crazy-max/ghaction-docker-buildx@v3
+#         with:
+#           buildx-version: latest
+#           qemu-version: latest
+
 jobs:
-  buildx:
+  update_pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Docker Buildx
-        uses: crazy-max/ghaction-docker-buildx@v3
-        with:
-          buildx-version: latest
-          qemu-version: latest
+    - uses: tzkhan/pr-update-action@v2
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        base-branch-regex: '[a-z\d-_.\\/]+'
+        head-branch-regex: 'foo-\d+'
+        title-template: '[%headbranch%] '
+        body-template: |
+          Merging into '%basebranch%'
+          [Link to %headbranch%](https://url/to/browse/ticket/%headbranch%)
+        body-update-action: 'suffix'
+        body-uppercase-base-match: false
