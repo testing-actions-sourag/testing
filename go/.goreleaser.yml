@@ -1,0 +1,12 @@
+project_name: hello-goreleaser
+
+builds:
+  - main: ./main.go
+
+archive:
+  format: tar.gz
+
+release:
+  github:
+    owner: souragc
+    name: testing
