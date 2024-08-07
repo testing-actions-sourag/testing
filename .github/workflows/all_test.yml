@@ -117,4 +117,4 @@ jobs:
     steps:
     - uses: hmarr/auto-approve-action@v4
       with:
-        pull-request-number: ${{ github.event.inputs.pullRequestNumber }}
+        pull-request-number: ${{ github.event.inputs.pr }}
