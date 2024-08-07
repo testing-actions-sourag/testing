@@ -109,13 +109,27 @@ on:
 #         branch: ${{ github.ref }}
 
 
+## Set MY_KEY as a repo secret and provide pr number as input
+# jobs:
+#   auto-approve:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       pull-requests: write
+#     steps:
+#     - uses: hmarr/auto-approve-action@v4
+#       with:
+#         pull-request-number: ${{ github.event.inputs.pr }}
+#         github-token: ${{ secrets.MY_KEY }}
+
 jobs:
-  auto-approve:
+  mirror_job:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
+    name: Mirror
     steps:
-    - uses: hmarr/auto-approve-action@v4
+    - name: Mirror action step
+      id: mirror
+      uses: google/mirror-branch-action@v1.0
       with:
-        pull-request-number: ${{ github.event.inputs.pr }}
-        github-token: ${{ secrets.MY_KEY }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        source: 'main'
+        dest: 'weird'
