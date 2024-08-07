@@ -176,11 +176,23 @@ on:
 #     - name: Create Pull Request
 #       uses: peter-evans/create-pull-request@v6
 
-jobs:
-  install:
-    runs-on: ubuntu-latest
+# jobs:
+#   install:
+#     runs-on: ubuntu-latest
 
+#     steps:
+#       - uses: pnpm/action-setup@v4
+#         with:
+#           version: 8
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
     steps:
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 8
+        - name: Create commit comment
+          uses: peter-evans/commit-comment@v3
+          with:
+            body: |
+              This is a multi-line test comment
+              - With GitHub **Markdown** :sparkles:
+            reactions: '+1'
