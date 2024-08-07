@@ -143,7 +143,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: "1.21"
-      - run: go test -v -coverprofile=profile.cov ./...
+      - run: go test -v -coverprofile=profile.cov ./go
 
       - uses: shogo82148/actions-goveralls@v1
         with:
