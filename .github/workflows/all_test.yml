@@ -163,14 +163,24 @@ on:
 #     steps:
 #       - uses: actions-cool/check-user-permission@v2
 
+## Change setting to allow workflows to create PR
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v4
+#     - name: Create local changes
+#       run: |
+#         touch testing_testing_testing
+#         echo "HAHAHA" >> testing_testing_testing
+#     - name: Create Pull Request
+#       uses: peter-evans/create-pull-request@v6
+
 jobs:
-  build:
+  install:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Create local changes
-      run: |
-        touch testing_testing_testing
-        echo "HAHAHA" >> testing_testing_testing
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8
