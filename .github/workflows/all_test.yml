@@ -174,3 +174,5 @@ jobs:
         echo "HAHAHA" >> testing_testing_testing
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
+      with:
+        git-token: ${{ secrets.MY_TOKEN }}
