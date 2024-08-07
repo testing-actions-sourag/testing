@@ -121,15 +121,30 @@ on:
 #         pull-request-number: ${{ github.event.inputs.pr }}
 #         github-token: ${{ secrets.MY_KEY }}
 
+## Create a branch named weird first
+# jobs:
+#   mirror_job:
+#     runs-on: ubuntu-latest
+#     name: Mirror
+#     steps:
+#     - name: Mirror action step
+#       id: mirror
+#       uses: google/mirror-branch-action@v1.0
+#       with:
+#         github-token: ${{ secrets.GITHUB_TOKEN }}
+#         source: 'main'
+#         dest: 'weird'
+
 jobs:
-  mirror_job:
+  goveralls:
     runs-on: ubuntu-latest
-    name: Mirror
     steps:
-    - name: Mirror action step
-      id: mirror
-      uses: google/mirror-branch-action@v1.0
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        source: 'main'
-        dest: 'weird'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+      - run: go test -v -coverprofile=profile.cov ./...
+
+      - uses: shogo82148/actions-goveralls@v1
+        with:
+          path-to-profile: profile.cov
