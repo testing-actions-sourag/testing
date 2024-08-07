@@ -135,16 +135,23 @@ on:
 #         source: 'main'
 #         dest: 'weird'
 
+## profile.cov file required
+# jobs:
+#   goveralls:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - uses: shogo82148/actions-goveralls@v1
+#         with:
+#           path-to-profile: profile.cov
+
+
 jobs:
-  goveralls:
+  setup-py:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # - uses: actions/setup-go@v5
-      #   with:
-      #     go-version: "1.21"
-      # - run: go test -v -coverprofile=profile.cov ./go
-
-      - uses: shogo82148/actions-goveralls@v1
+      - uses: actions/setup-python@v5
         with:
-          path-to-profile: profile.cov
+          python-version: '3.10'
