@@ -225,5 +225,4 @@ jobs:
       with:
         azcliversion: latest
         inlineScript: |
-          az account show
-          az storage -h
+          az --version
