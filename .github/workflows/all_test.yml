@@ -197,19 +197,33 @@ on:
 #               - With GitHub **Markdown** :sparkles:
 #             reactions: '+1'
 
-jobs:
-  caching:
-    runs-on: ubuntu-latest
-    env:
-      extensions: intl, pcov
-      key: cache-v1
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+# jobs:
+#   caching:
+#     runs-on: ubuntu-latest
+#     env:
+#       extensions: intl, pcov
+#       key: cache-v1
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v4
 
-    - name: Setup cache environment
-      id: extcache
-      uses: shivammathur/cache-extensions@v1
+#     - name: Setup cache environment
+#       id: extcache
+#       uses: shivammathur/cache-extensions@v1
+#       with:
+#         extensions: ${{ env.extensions }}
+#         key: ${{ env.key }}
+
+
+jobs:
+  azure-cli:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Azure CLI script
+      uses: azure/cli@v2
       with:
-        extensions: ${{ env.extensions }}
-        key: ${{ env.key }}
+        azcliversion: latest
+        inlineScript: |
+          az account show
+          az storage -h
