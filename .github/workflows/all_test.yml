@@ -231,4 +231,5 @@ jobs:
   sdk-update:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: xt0rted/dotnet-sdk-updater@v1.2.0
