@@ -6,6 +6,9 @@ on:
       pr:
         description: PR Number
         required: false
+  pull_request:
+    types:
+      - labeled
 
   # issue_comment:
   
@@ -227,9 +230,23 @@ on:
 #         inlineScript: |
 #           az --version
 
+## global.json required.
+# jobs:
+#   sdk-update:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+#       - uses: xt0rted/dotnet-sdk-updater@v1.2.0
+
+## PR event with pr labelled with automerge
 jobs:
-  sdk-update:
+  automerge:
     runs-on: ubuntu-latest
+    permissions:
+          contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: xt0rted/dotnet-sdk-updater@v1.2.0
+      - id: automerge
+        name: automerge
+        uses: "pascalgn/automerge-action@v0.16.3"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
