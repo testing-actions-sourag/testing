@@ -197,4 +197,19 @@ on:
 #               - With GitHub **Markdown** :sparkles:
 #             reactions: '+1'
 
+jobs:
+  caching:
+    runs-on: ubuntu-latest
+    env:
+      extensions: intl, pcov
+      key: cache-v1
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
 
+    - name: Setup cache environment
+      id: extcache
+      uses: shivammathur/cache-extensions@v1
+      with:
+        extensions: ${{ env.extensions }}
+        key: ${{ env.key }}
