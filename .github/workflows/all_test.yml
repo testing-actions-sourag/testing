@@ -6,9 +6,9 @@ on:
       pr:
         description: PR Number
         required: false
-  pull_request:
-    types:
-      - labeled
+  # pull_request:
+  #   types:
+  #     - labeled
 
   # issue_comment:
   
@@ -239,14 +239,31 @@ on:
 #       - uses: xt0rted/dotnet-sdk-updater@v1.2.0
 
 ## PR event with pr labelled with automerge
+# jobs:
+#   automerge:
+#     runs-on: ubuntu-latest
+#     permissions:
+#           contents: write
+#     steps:
+#       - id: automerge
+#         name: automerge
+#         uses: "pascalgn/automerge-action@v0.16.3"
+#         env:
+#           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
 jobs:
-  automerge:
+  tsc:
+    name: tsc
     runs-on: ubuntu-latest
-    permissions:
-          contents: write
     steps:
-      - id: automerge
-        name: automerge
-        uses: "pascalgn/automerge-action@v0.16.3"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    - uses: actions/checkout@v4
+    - name: install node v12
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+    - name: yarn install
+      run: yarn install
+    - name: tsc
+      uses: icrawl/action-tsc@v1
+      with:
+        project: ./typescript
