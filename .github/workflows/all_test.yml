@@ -215,14 +215,20 @@ on:
 #         key: ${{ env.key }}
 
 
+# jobs:
+#   azure-cli:
+#     runs-on: ubuntu-latest
+#     steps:
+
+#     - name: Azure CLI script
+#       uses: azure/cli@v2
+#       with:
+#         azcliversion: latest
+#         inlineScript: |
+#           az --version
+
 jobs:
-  azure-cli:
+  sdk-update:
     runs-on: ubuntu-latest
     steps:
-
-    - name: Azure CLI script
-      uses: azure/cli@v2
-      with:
-        azcliversion: latest
-        inlineScript: |
-          az --version
+      - uses: xt0rted/dotnet-sdk-updater@v1.2.0
