@@ -251,19 +251,33 @@ on:
 #         env:
 #           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
+
+## Have to fix this later
+# jobs:
+#   tsc:
+#     name: tsc
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v4
+#     - name: install node v12
+#       uses: actions/setup-node@v4
+#       with:
+#         node-version: 20
+#     - name: yarn install
+#       run: yarn install
+#     - name: tsc
+#       uses: icrawl/action-tsc@v1
+#       with:
+#         project: ./typescript
+
 jobs:
-  tsc:
-    name: tsc
+  gotestsum:
+    name: Example gotestsum interaction
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: install node v12
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-    - name: yarn install
-      run: yarn install
-    - name: tsc
-      uses: icrawl/action-tsc@v1
-      with:
-        project: ./typescript
+      - name: Setup gotestsum
+        uses: autero1/action-gotestsum@v2
+        with:
+          gotestsum_version: 0.4.1
+      - name: Interact with gotestsum
+        run: gotestsum --format short-verbose
