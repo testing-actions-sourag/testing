@@ -9,8 +9,9 @@ on:
   # pull_request:
   #   types:
   #     - labeled
-  pull_request_target:
-    types: [opened, edited, reopened]
+  
+  # pull_request_target:
+  #   types: [opened, edited, reopened]
 
   # issue_comment:
   
@@ -307,15 +308,30 @@ on:
 #     steps:
 #         - uses: korelstar/phplint-problem-matcher@v1
 
+## pull_request_target part of the event required
+# jobs:
+#   check-pr-fill:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: check fill
+#         uses: actions-cool/pr-check-fill@v1
+#         with:
+#           token: ${{ secrets.GITHUB_TOKEN }}
+#           filter-start: '|'
+#           require-include: 'English'
+#           comment-body: 'Check failed.'
+#           skip-title-start: 'docs'
+
 jobs:
-  check-pr-fill:
+  deploy-k8:
     runs-on: ubuntu-latest
     steps:
-      - name: check fill
-        uses: actions-cool/pr-check-fill@v1
+      - uses: Azure/k8s-deploy@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          filter-start: '|'
-          require-include: 'English'
-          comment-body: 'Check failed.'
-          skip-title-start: 'docs'
+          namespace: 'myapp'
+          manifests: |
+            dir/manifestsDirectory
+          images: 'contoso.azurecr.io/myapp:${{ event.run_id }}'
+          imagepullsecrets: |
+            image-pull-secret1
+            image-pull-secret2
