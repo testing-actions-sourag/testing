@@ -6,9 +6,10 @@ on:
       pr:
         description: PR Number
         required: false
-  # pull_request:
-  #   types:
-  #     - labeled
+  pull_request:
+    types:
+      - labeled
+      - reopened
   
   # pull_request_target:
   #   types: [opened, edited, reopened]
@@ -323,15 +324,15 @@ on:
 #           skip-title-start: 'docs'
 
 jobs:
-  deploy-k8:
+  verify-pr:
     runs-on: ubuntu-latest
     steps:
-      - uses: Azure/k8s-deploy@v5
+      - name: verify-version
+        uses: actions-cool/verify-package-version@v1.1.2
         with:
-          namespace: 'myapp'
-          manifests: |
-            dir/manifestsDirectory
-          images: 'contoso.azurecr.io/myapp'
+          title-include-content: 'docs'
+          title-include-version: true
+          open-comment: true
           imagepullsecrets: |
             image-pull-secret1
             image-pull-secret2
