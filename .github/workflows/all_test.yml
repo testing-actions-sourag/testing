@@ -280,11 +280,21 @@ on:
 #         with:
 #           gotestsum_version: 0.4.1
 
+# jobs:
+#     ssh-agent:
+#         runs-on: ubuntu-latest
+#         steps:
+#             - uses: actions/checkout@v4
+#             - uses: webfactory/ssh-agent@v0.9.0
+#               with:
+#                   ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
 jobs:
-    ssh-agent:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: webfactory/ssh-agent@v0.9.0
-              with:
-                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+  downloader:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: robinraju/release-downloader@v1
+        with:
+          repository: 'Mojang/bedrock-samples'
+          latest: true
+          zipBall: true
