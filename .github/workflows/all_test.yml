@@ -331,7 +331,7 @@ jobs:
           namespace: 'myapp'
           manifests: |
             dir/manifestsDirectory
-          images: 'contoso.azurecr.io/myapp:${{ event.run_id }}'
+          images: 'contoso.azurecr.io/myapp'
           imagepullsecrets: |
             image-pull-secret1
             image-pull-secret2
