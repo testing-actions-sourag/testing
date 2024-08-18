@@ -270,14 +270,21 @@ on:
 #       with:
 #         project: ./typescript
 
+# jobs:
+#   gotestsum:
+#     name: Example gotestsum interaction
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Setup gotestsum
+#         uses: autero1/action-gotestsum@v2.0.0
+#         with:
+#           gotestsum_version: 0.4.1
+
 jobs:
-  gotestsum:
-    name: Example gotestsum interaction
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup gotestsum
-        uses: autero1/action-gotestsum@v2.0.0
-        with:
-          gotestsum_version: 0.4.1
-      - name: Interact with gotestsum
-        run: gotestsum --format short-verbose
+    ssh-agent:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: webfactory/ssh-agent@v0.9.0
+              with:
+                  ssh-private-key: AAAAAAAAAAAAA
