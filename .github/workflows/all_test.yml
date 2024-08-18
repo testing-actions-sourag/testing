@@ -289,12 +289,18 @@ on:
 #               with:
 #                   ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+# jobs:
+#   downloader:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: robinraju/release-downloader@v1
+#         with:
+#           repository: 'Mojang/bedrock-samples'
+#           latest: true
+#           zipBall: true
+
 jobs:
-  downloader:
+  pointer:
     runs-on: ubuntu-latest
     steps:
-      - uses: robinraju/release-downloader@v1
-        with:
-          repository: 'Mojang/bedrock-samples'
-          latest: true
-          zipBall: true
+        - uses: korelstar/phplint-problem-matcher@v1
